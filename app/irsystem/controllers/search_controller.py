@@ -87,5 +87,6 @@ def explanation():
 
 @irsystem.route('/', methods=['GET'])
 def home():
-	descriptors = [e.word.replace('_', ' ') for e in query_embeddings()]
+	embeddings = sorted(query_embeddings(), key=lambda e: e.count, reverse=True)
+	descriptors = [e.word.replace('_', ' ') for e in embeddings]
 	return render_template('search.html', descriptors=descriptors)
