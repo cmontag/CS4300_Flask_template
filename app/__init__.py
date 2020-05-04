@@ -14,6 +14,7 @@ socketio = SocketIO()
 app = Flask(__name__)
 app.config.from_object(os.environ["APP_SETTINGS"])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+app.secret_key = os.environb.get(b'SECRET_KEY').decode('unicode-escape').encode('latin-1')
 
 # DB
 db = SQLAlchemy(app)
