@@ -126,9 +126,14 @@ https://getbootstrap.com/docs/4.4/examples/cover/ -->
             'width': '100%',
             'placeholder': 'eg. "light bodied, luminous, lush"',
             'autocomplete': {
-               source: descriptors
+               source: descriptors,
+               delay: 0,
+               minLength: 0
             },
             'values': descriptors
+         });
+         $('#descriptors-input_tag').focus(function(){            
+            $(this).data("uiAutocomplete").search($(this).val());
          });
 
          function checkCocktail(select) {
@@ -146,9 +151,13 @@ https://getbootstrap.com/docs/4.4/examples/cover/ -->
          $(function() {
             var availableTags = ['vodka', 'Midori', 'sloe', 'lychee', 'Chambord', 'Averna', 'beer', 'Campari', 'coffee', 'banana', 'sherry', 'Champagne', 'Mekhong', 'Jagermeister', 'Irish', 'Pimm', 'sake', 'nonalcoholic', 'RumChata', 'peach', 'absinthe', 'rum', 'Galliano', 'Southern', 'melon', 'Benedictine', 'brandy', 'tequila', 'pisco', 'shooter', 'chocolate', 'gin', 'Cointreau', 'whiskey', 'cachaca', 'Strega', 'vermouth', 'wine', 'cachaça', 'Frangelico', 'Grand', 'TyKu', 'Agavero'];
             $('#base-input').autocomplete({
-               source: availableTags
+               source: availableTags,
+               delay: 0,
+               minLength: 0
+            }).focus(function(){            
+               $(this).data("uiAutocomplete").search($(this).val());
             });
-         } );
+         });
 
          $(function() {
             $('.main-form').submit(function() {
