@@ -38,7 +38,7 @@ def search_drinks(drinks, args):
         query = sum(q_vectors) / len(q_vectors)
 
     if query is None:
-        return [(d, 0) for d in drinks]
+        return [(d, None) for d in drinks]
 
     # Search database results for k nearest neighbors
     d_vectors = [np.array(json.loads(d.vbytes)) for d in drinks]

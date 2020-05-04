@@ -161,7 +161,9 @@ https://getbootstrap.com/docs/4.4/examples/cover/ -->
                      var header_heading = $('<h2 class="mb-0 flex-grow-1"></h2>');
                      var header_heading_button = $('<button class="btn btn-link text-left" type="button" data-toggle="collapse" data-target="#collapse' + card_index + '" aria-controls="collapse' + card_index + '"></button>');
                      header_heading_button.append('<strong>' + card_index + '.</strong> ' + results[i].drink.name);
-                     header_heading_button.append('<span style="float: right; margin-right: 0.5em;">' + results[i].dist + '% match</span>')
+                     if (results[i].dist != null) {
+                        header_heading_button.append('<span style="float: right; margin-right: 0.5em;">' + results[i].dist + '% match</span>')
+                     }
                      header_heading.append(header_heading_button);
                      header.append(header_heading);
                      card.append(header);
