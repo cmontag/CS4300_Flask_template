@@ -184,7 +184,8 @@ https://getbootstrap.com/docs/4.4/examples/cover/ -->
                      }
                      info_body.append($('<a href="/search?page=0&drink=' + results[i].drink.name + '" class="btn btn-outline-primary mr-1">Find similar drinks</a>'));
                      info_body.append('\n');
-                     info_body.append($('<a href="' + results[i].drink.url + '" class="btn btn-outline-primary">Buy this ' + results[i].drink.type + '</a>'));
+                     var urlMsg = (results[i].drink.price != null) ? 'Order online' : 'Learn more'
+                     info_body.append($('<a href="' + results[i].drink.url + '" class="btn btn-outline-primary">' + urlMsg + '</a>'));
 
                      // add reviews tab if there are reviews
                      if (results[i].reviews.length != 0) {
