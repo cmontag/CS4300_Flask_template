@@ -81,6 +81,10 @@ def search():
 		drink_name=args.data if type(args.data) == str else None
 	)
 
+@irsystem.route('/how-it-works', methods=['GET'])
+def explanation():
+	return render_template('explanation.html')
+
 @irsystem.route('/', methods=['GET'])
 def home():
 	descriptors = [e.word.replace('_', ' ') for e in query_embeddings()]
