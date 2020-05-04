@@ -228,6 +228,11 @@ main .lead {
    padding-bottom: 0.2rem;
 }
 
+/* Bugfix for Firefox */
+#price-line input, #abv-line input {
+   min-width: 0;
+}
+
 /* Results List */
 
 .results-list {
