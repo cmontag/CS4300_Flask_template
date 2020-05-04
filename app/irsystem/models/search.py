@@ -18,6 +18,9 @@ class Args:
             return self.__dict__ == value.__dict__
         return NotImplemented
 
+def score(dist):
+    return round(100 * (1 - dist), 0)
+
 def search_drinks(drinks, args):
     query = None
     count = len(drinks)
@@ -43,4 +46,4 @@ def search_drinks(drinks, args):
     dst_vec = cdist([query], knn_data, 'cosine')[0]
     ind_vec = np.argsort(dst_vec)
     
-    return [(drinks[i], dst_vec[i]) for i in ind_vec if dst_vec[i] <= 0.3]
+    return [(drinks[i], score(dst_vec[i])) for i in ind_vec if dst_vec[i] <= 0.5]
