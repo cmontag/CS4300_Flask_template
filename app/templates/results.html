@@ -54,6 +54,7 @@ https://getbootstrap.com/docs/4.4/examples/cover/ -->
          <main role="main" class="inner cover">
             <p class="lead text-center">here's what we've picked for you</p><hr class="fancy mt-4 mb-5" />
             <div class="text-left text-dark results-list"></div>
+            <div id="no-results" class="text-center" style="font-size: 1.5em;"></div>
             <div id="prefooter" class="text-center mt-5">
                <div id="loading-animation" class="sk-fading-circle" style="display: none;">
                   <div class="sk-circle1 sk-circle"></div>
@@ -150,6 +151,10 @@ https://getbootstrap.com/docs/4.4/examples/cover/ -->
                      $('#prefooter').append($('<hr id="all-results-divider" class="fancy mt-5 mb-4" />'));
                      $('#prefooter').append($('<p id="all-results-text">all results loaded</p>'));                        
                   }
+
+                  if (results.length == 0) {
+                     $('#no-results').append('<p>no matches :(</p>');
+                  }
                   
                   for (let i = 0; i < results.length; i++) {
                      var card_index = ((page - 1) * 10 + i + 1).toString();
@@ -171,6 +176,9 @@ https://getbootstrap.com/docs/4.4/examples/cover/ -->
                      var header_heading = $('<h2 class="mb-0 flex-grow-1"></h2>');
                      var header_heading_button = $('<button class="btn btn-link text-left" type="button" data-toggle="collapse" data-target="#collapse' + card_index + '" aria-controls="collapse' + card_index + '"></button>');
                      header_heading_button.append('<strong>' + card_index + '.</strong> ' + results[i].drink.name);
+                     if (results[i].dist != null) {
+                        header_heading_button.append('<span style="float: right; margin-right: 0.5em;">' + results[i].dist + '% match</span>')
+                     }
                      header_heading.append(header_heading_button);
                      header.append(header_heading);
                      card.append(header);
@@ -193,7 +201,8 @@ https://getbootstrap.com/docs/4.4/examples/cover/ -->
                      }
                      info_body.append($('<a href="/search?page=0&drink=' + results[i].drink.name + '" class="btn btn-outline-primary mr-1">Find similar drinks</a>'));
                      info_body.append('\n');
-                     info_body.append($('<a href="' + results[i].drink.url + '" class="btn btn-outline-primary">Buy this ' + results[i].drink.type + '</a>'));
+                     var urlMsg = (results[i].drink.price != null) ? 'Order online' : 'Learn more'
+                     info_body.append($('<a href="' + results[i].drink.url + '" class="btn btn-outline-primary">' + urlMsg + '</a>'));
 
                      // add reviews tab if there are reviews
                      if (results[i].reviews.length != 0) {
