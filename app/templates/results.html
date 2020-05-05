@@ -186,7 +186,9 @@ https://getbootstrap.com/docs/4.4/examples/cover/ -->
                      var content = $('<div id="collapse' + card_index + '" class="collapse" aria-labelledby="heading' + card_index + '"></div>');
                      var info_body = $('<div class="card-body text-dark no-reviews"></div>');
                      info_body.append($('<h4>About this ' + results[i].drink.type + '</h4>'));
-                     info_body.append($('<p>' + results[i].drink.description + '</p>'));
+                     if (results[i].drink.description != null) {
+                        info_body.append($('<p>' + results[i].drink.description + '</p>'));
+                     }
                      if (results[i].drink.rating != null) {
                         var rating_split = results[i].drink.rating.split('/')
                         var rating_num = rating_split[0].slice(0, 5)
@@ -199,7 +201,7 @@ https://getbootstrap.com/docs/4.4/examples/cover/ -->
                      if (results[i].drink.price != null) {
                         info_body.append($('<p><strong>Price:</strong> $' + results[i].drink.price + '</p>'));
                      }
-                     if (results[i].drink.origin != null) {
+                     if (results[i].drink.origin != null && !isNaN(results[i].drink.origin)) {
                         info_body.append($('<p><strong>Origin:</strong> ' + results[i].drink.origin + '</p>'));
                      }
                      info_body.append($('<a href="/search?page=0&drink=' + results[i].drink.name + '" class="btn btn-outline-primary mr-1">Find similar drinks</a>'));
@@ -223,7 +225,7 @@ https://getbootstrap.com/docs/4.4/examples/cover/ -->
                               var review_quote = $('<blockquote class="blockquote"></blockquote>');
                               review_quote.append($('<p class="mb-0">' + review.body + '</p>'));
                               var review_footer = $('<footer class="blockquote-footer"></footer>');
-                              review_footer.append('Reviewed by <cite>' + review.author + '</cite>' + (review.date != null ? 'on' : '') + ' (Rating: ' + review.rating + ')');
+                              review_footer.append('Reviewed by <cite>' + review.author + '</cite>' + (review.date != null ? ' on ' + review.date : '') + ' (Rating: ' + review.rating + ')');
                               review_quote.append(review_footer);
                               review_body.append(review_quote);
                            }
