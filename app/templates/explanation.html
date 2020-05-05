@@ -1,0 +1,134 @@
+<!-- Code references:
+https://stackoverflow.com/questions/29738787/filling-water-animation/29740828#29740828
+https://www.mkronenfeld.de/filling-liquid-animation/
+https://stackoverflow.com/questions/24210132/remove-border-radius-from-select-tag-in-bootstrap-3/24766039
+https://getbootstrap.com/docs/4.4/examples/cover/ -->
+
+<!doctype html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <title>pick your poison</title>
+      <link rel="stylesheet" href="/static/bootstrap.min.css">
+      <link rel="stylesheet" href="/static/style.css">
+      <script src="https://kit.fontawesome.com/3798c5de2c.js" crossorigin="anonymous"></script>  
+   </head>
+   <body>
+
+      <!-- Wave Graphic -->
+      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" style="display: none;">
+         <symbol id="wave">
+            <path class="waveShape" d="M300 300V2.5s-.6-.1-1.1-.1c0 0-25.5-2.3-40.5-2.4-15 0-40.6 2.4-40.6 2.4-12.3 1.1-30.3 1.8-31.9 1.9-2-.1-19.7-.8-32-1.9 0 0-25.8-2.3-40.8-2.4-15 0-40.8 2.4-40.8 2.4-12.3 1.1-30.4 1.8-32 1.9-2-.1-20-.8-32.2-1.9 0 0-3.1-.3-8.1-.7V300h300z"/>
+         </symbol>
+      </svg>
+      <div class="liquid">
+         <svg viewBox="0 0 300 20" class="liquid__wave">
+            <use xlink:href="#wave"></use>
+         </svg>
+      </div>
+
+      <div class="cover-container d-flex w-100 h-100 mx-auto flex-column">
+
+         <header class="masthead text-center">
+            <nav class="navbar navbar-dark justify-content-end">
+               <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
+                  <span class="navbar-toggler-icon"></span>
+               </button>
+               <div class="collapse navbar-collapse flex-grow-0" id="navbarSupportedContent">
+                  <ul class="navbar-nav text-right">
+                     <li class="nav-item">
+                           <a class="nav-link" href="/">Home</a>
+                     </li>
+                     <li class="nav-item">
+                           <a class="nav-link" href="/how-it-works">How It Works</a>
+                     </li>
+                  </ul>
+               </div>
+            </nav>
+            <div class="inner">
+               <h3 class="masthead-brand"><a href="/">pick your poison</a></h3>
+            </div>
+         </header>
+
+         <main role="main" class="inner cover">
+            <p class="lead text-center">our process</p><hr class="fancy mt-4 mb-5" />
+            <!-- <p>
+                The world of alcohol is a daunting one, without a doubt. With so many 
+                types, flavors, and price points to choose from, it's nearly an impossible 
+                task just figuring out what drink you like, much less actually getting 
+                your hands on it. Most resources out there are either limited to a certain 
+                type of drink or simply don't give you the tools you need to find what 
+                you're looking for.
+            </p> -->
+            <p>
+                Pick Your Poison is your answer to all questions alcohol. We combine a 
+                powerful recommendation engine with an extensive drink database to serve 
+                you your top choice of any kind of drink. You'll be able to read reviews 
+                from professional sommeliers and cicerones, look for specific flavors and 
+                prices, and order the drinks you like the most for home delivery.
+            </p>
+            <p>
+                We know firsthand that it can be a challenge finding the right words to 
+                describe your favorite drink, not to mention that the language used by 
+                drink vendors and reviewers can vary wildly! That's why we tailor our 
+                searches to a list of about 600 descriptors specific to the drink industry 
+                to help you streamline the way you look for drinks. Originating from 
+                contributions by researchers and drink experts representing places like 
+                <a href="https://www.researchgate.net/publication/273780770_Wineinformatics_Applying_Data_Mining_on_Wine_Sensory_Reviews_Processed_by_the_Computational_Wine_Wheel"><u>UCA</u></a>, 
+                <a href="https://www.winearomawheel.com/"><u>UC Davis</u></a>, and 
+                <a href="https://winefolly.com/tips/wine-aroma-wheel-100-flavors/"><u>Wine Folly</u></a>, 
+                this list took the form of tiered wheels useful for standardizing and
+                categorizing drink jargon into a usable form.
+            </p>
+            <br>
+            <p><img src="/static/aroma_wheel.png" alt="wine aroma wheel" width="100%"/></p>
+            <p class="text-center" style="color: rgba(255, 255, 255, .75)">Aroma Wheel</p><br><br>
+            <p><img src="/static/non_aroma_wheel.png" alt="wine non aroma wheel" width="100%"/></p>
+            <p class="text-center" style="color: rgba(255, 255, 255, .75)">Non-Aroma Wheel</p><br><br>
+            <p>
+                Our ranking process is based off of the descriptions and reviews of every 
+                drink in our database. We specifically extract descriptors from the 
+                outermost tier of our wheels, the ones you can search with, for as precise 
+                a ranking as possible. By training a machine learning model on thousands of 
+                these texts and building a vector space for all of our drinks, we've enabled 
+                you to find unique matches for the descriptors you're most interested in at 
+                instant speed.
+            </p>
+            <p>
+                We hope you've found this insight into our process helpful. 
+                Now go practice some safe drinking!
+            </p>
+            <br>
+         </main>
+
+         <footer class="mastfoot text-center">
+            <div class="inner">
+               <p>created by Derek Cheng, Collin Montag, DB Lee, Dana Luong, and Ishneet Sachar</p>
+            </div>
+         </footer>
+
+      </div>
+
+      <!-- Bootstrap JS -->
+      <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+      <script src="//code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+      <script>
+         const body = document.getElementsByTagName('body')[0];
+         const footer = document.getElementsByClassName('mastfoot')[0];
+         const main = document.getElementsByTagName('main')[0];
+         body.style.height = '100vh';
+         body.style.overflow = 'hidden';
+         
+         const fillAnimation = document.querySelector('.liquid');
+         fillAnimation.onanimationend = () => {
+            body.style.height = '100%';
+            body.style.overflow = 'visible';
+         };
+      </script>
+      
+   </body>
+</html>

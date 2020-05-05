@@ -90,34 +90,16 @@ body.search {
    text-decoration: none;
 }
 
-.nav-masthead .nav-link {
-   padding: .25rem 0;
-   font-weight: 700;
-   color: rgba(255, 255, 255, .5);
-   background-color: transparent;
-   border-bottom: .25rem solid transparent;
-}
-
-.nav-masthead .nav-link:hover,
-.nav-masthead .nav-link:focus {
-   border-bottom-color: rgba(255, 255, 255, .25);
-}
-
-.nav-masthead .nav-link + .nav-link {
-   margin-left: 1rem;
-}
-
-.nav-masthead .active {
-   color: #fff;
-   border-bottom-color: #fff;
+.masthead nav {
+   position: absolute;
+   width: fit-content;
+   right: 2%;
+   text-shadow: none;
 }
 
 @media (min-width: 48em) {
    .masthead-brand {
       float: center;
-   }
-   .nav-masthead {
-      float: right;
    }
 }
 
@@ -232,13 +214,23 @@ main .lead {
 .ui-autocomplete {
    text-align: left;
    text-shadow: none;
-   max-height: 100px;
+   max-height: 175px;
    overflow-y: auto;
    overflow-x: hidden;
 }
 
 .main-form .tagsinput input:focus {
    border: none;
+}
+
+.tooltip-underline {
+   border-bottom: 1px dashed #fff;
+   padding-bottom: 0.2rem;
+}
+
+/* Bugfix for Firefox */
+#price-line input, #abv-line input {
+   min-width: 0;
 }
 
 /* Results List */
@@ -270,13 +262,30 @@ main .lead {
 .results-list .card-header i {
    margin: auto 0;
    font-size: 1.5em;
+   flex-shrink: 0;
 }
 
 .results-list .card-header button {
    position: relative;
    width: 100%;
+   display: flex;
+   align-items: center;
 }
-   
+
+.results-list .card-header button .drink-name {
+   position: relative;
+   display: inline-block;
+   flex-grow: 1;
+}
+
+.results-list .card-header button .percentage-match {
+   position: relative;
+   display: inline-block;
+   flex-shrink: 0;
+   font-size: 0.8em;
+   margin: 0 0.7em 0 0.8em;
+}
+
 .results-list .card-header button::after {
    content: "\f107";
    top: 0;

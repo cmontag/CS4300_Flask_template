@@ -39,6 +39,7 @@ class Drink(db.Model):
 class Embedding(db.Model):
     __tablename__ = 'embedding'
     word = db.Column(db.Text(), primary_key=True)
+    count = db.Column(db.Integer(), nullable=False)
     vbytes = db.Column(db.Text(), nullable=False)
 
     def __repr__(self):

@@ -26,10 +26,10 @@ def make_args(args):
 	return Args(
 		data=dname if dname is not None else desc_lst,
 		dtype=dtype if dtype != 'anything' else None,
-		pmin=conv_arg(args.get('minprice'), float),
-		pmax=conv_arg(args.get('maxprice'), float),
-		amin=conv_arg(args.get('minabv'), float),
-		amax=conv_arg(args.get('maxabv'), float),
+		pmin=conv_arg(args.get('minprice').replace('$', '').replace(',', ''), float),
+		pmax=conv_arg(args.get('maxprice').replace('$', '').replace(',', ''), float),
+		amin=conv_arg(args.get('minabv').replace('%', ''), float),
+		amax=conv_arg(args.get('maxabv').replace('%', ''), float),
 		base=conv_arg(args.get('base'), str)
 	)
 
@@ -81,7 +81,12 @@ def search():
 		drink_name=args.data if type(args.data) == str else None
 	)
 
+@irsystem.route('/how-it-works', methods=['GET'])
+def explanation():
+	return render_template('explanation.html')
+
 @irsystem.route('/', methods=['GET'])
 def home():
-	descriptors = [e.word.replace('_', ' ') for e in query_embeddings()]
+	embeddings = sorted(query_embeddings(), key=lambda e: e.count, reverse=True)
+	descriptors = [e.word.replace('_', ' ') for e in embeddings]
 	return render_template('search.html', descriptors=descriptors)

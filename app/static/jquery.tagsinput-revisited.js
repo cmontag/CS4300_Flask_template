@@ -33,7 +33,6 @@
 			}
 
 			// do not allow free input
-			console.log(settings);
 			if (!settings.values.includes(value)) {
 				$('#' + id + '_tag').addClass('error');
 				return false;
