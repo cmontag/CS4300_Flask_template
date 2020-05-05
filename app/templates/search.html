@@ -111,29 +111,40 @@ https://getbootstrap.com/docs/4.4/examples/cover/ -->
       <script src="//code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
       <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
 
-      <!-- <script src="/static/tagsinput.js"></script>
-      <script src="/static/typeahead.bundle.min.js"></script> -->
+      <script src="/static/jquery.inputmask.min.js"></script>
       <script src="/static/jquery.tagsinput-revisited.js"></script>
       
       <script>
+         // flag for initial click on descriptors
+         var descriptors_clicked = false;
+
          $(function () {
             $('#descriptors-input_tag').tooltip({'placement': 'right', 'trigger':'focus', 'title': 'Start typing and select any number of descriptors from the dropdown'});
             $('[data-toggle="tooltip"]').tooltip();
          })
          
-         const descriptors = {{descriptors|tojson}};
+         const descriptors_all = {{descriptors|tojson}};
+         const descriptors_initial = descriptors_all.slice(0, 50);
          $('.tagsinput').tagsInput({
             'width': '100%',
             'placeholder': 'eg. "light bodied, luminous, lush"',
             'autocomplete': {
-               source: descriptors,
+               source: descriptors_initial,
                delay: 0,
                minLength: 0
             },
-            'values': descriptors
+            'values': descriptors_all
          });
-         $('#descriptors-input_tag').focus(function(){            
+         $('#descriptors-input_tag').focus(function(){     
             $(this).data("uiAutocomplete").search($(this).val());
+            if (!descriptors_clicked) {
+               $('#descriptors-input_tag').autocomplete({
+                  source: descriptors_all,
+                  delay: 0,
+                  minLength: 0
+               });
+               descriptors_clicked = true;
+            }
          });
 
          function checkCocktail(select) {
@@ -163,6 +174,49 @@ https://getbootstrap.com/docs/4.4/examples/cover/ -->
             $('.main-form').submit(function() {
                $(this).find(':input').filter(function(){ return !this.value; }).attr('disabled', 'disabled');
                return true; // ensure form still submits
+            });
+         });
+
+         // input masks
+         $(function() {
+            // price inputs
+            $('#minprice-input').inputmask('currency', {
+               prefix: '$',
+               showMaskOnHover: false,
+               rightAlign: false,
+               clearMaskOnLostFocus: true,
+               clearIncomplete: true,
+            });
+            $('#minprice-input').blur(function() {
+               if ($('#minprice-input').val() == '$0.00') {
+                  $('#minprice-input').val('');
+               }
+            });
+            $('#maxprice-input').inputmask('currency', {
+               prefix: "$",
+               showMaskOnHover: false,
+               rightAlign: false,
+               clearMaskOnLostFocus: true,
+               clearIncomplete: true,
+            });
+            $('#maxprice-input').blur(function() {
+               if ($('#maxprice-input').val() == '$0.00') {
+                  $('#maxprice-input').val('');
+               }
+            });
+
+            // abv inputs
+            $('#minabv-input').inputmask('percentage', {
+               showMaskOnHover: false,
+               rightAlign: false,
+               clearMaskOnLostFocus: true,
+               clearIncomplete: true,
+            });
+            $('#maxabv-input').inputmask('percentage', {
+               showMaskOnHover: false,
+               rightAlign: false,
+               clearMaskOnLostFocus: true,
+               clearIncomplete: true,
             });
          });
       </script>
