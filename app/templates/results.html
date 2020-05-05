@@ -115,6 +115,12 @@ https://getbootstrap.com/docs/4.4/examples/cover/ -->
             footer.style.left = '0';
             footer.style.right = '0';
             main.style.marginBottom = '1.5rem';
+
+            // position footer correctly if results are cached and page instaloads
+            if (body.clientHeight != document.documentElement.clientHeight) {
+               footer.removeAttribute('style');
+               main.removeAttribute('style');
+            }
          };
 
          function loadMore() {
@@ -257,6 +263,7 @@ https://getbootstrap.com/docs/4.4/examples/cover/ -->
                   }
                   
                   $("#result").text(data.result);
+
                   // position the footer correctly
                   if (body.clientHeight != document.documentElement.clientHeight) {
                      footer.removeAttribute('style');

@@ -262,6 +262,7 @@ main .lead {
 .results-list .card-header i {
    margin: auto 0;
    font-size: 1.5em;
+   flex-shrink: 0;
 }
 
 .results-list .card-header button {
