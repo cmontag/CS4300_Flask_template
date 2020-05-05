@@ -26,10 +26,10 @@ def make_args(args):
 	return Args(
 		data=dname if dname is not None else desc_lst,
 		dtype=dtype if dtype != 'anything' else None,
-		pmin=conv_arg(args.get('minprice'), float),
-		pmax=conv_arg(args.get('maxprice'), float),
-		amin=conv_arg(args.get('minabv'), float),
-		amax=conv_arg(args.get('maxabv'), float),
+		pmin=conv_arg(args.get('minprice').replace('$', ''), float),
+		pmax=conv_arg(args.get('maxprice').replace('$', ''), float),
+		amin=conv_arg(args.get('minabv').replace('%', ''), float),
+		amax=conv_arg(args.get('maxabv').replace('%', ''), float),
 		base=conv_arg(args.get('base'), str)
 	)
 
