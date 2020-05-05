@@ -180,7 +180,10 @@ https://getbootstrap.com/docs/4.4/examples/cover/ -->
                      info_body.append($('<h4>About this ' + results[i].drink.type + '</h4>'));
                      info_body.append($('<p>' + results[i].drink.description + '</p>'));
                      if (results[i].drink.rating != null) {
-                        info_body.append($('<p><strong>Rating:</strong> ' + results[i].drink.rating + '</p>'));
+                        var rating_split = results[i].drink.rating.split('/')
+                        var rating_num = rating_split[0].slice(0, 5)
+                        var rating_join = rating_num + '/' + rating_split[1]
+                        info_body.append($('<p><strong>Rating:</strong> ' + rating_join + '</p>'));
                      }
                      if (results[i].drink.abv != null) {
                         info_body.append($('<p><strong>ABV:</strong> ' + results[i].drink.abv + '%</p>'));
