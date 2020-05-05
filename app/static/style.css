@@ -214,7 +214,7 @@ main .lead {
 .ui-autocomplete {
    text-align: left;
    text-shadow: none;
-   max-height: 100px;
+   max-height: 175px;
    overflow-y: auto;
    overflow-x: hidden;
 }

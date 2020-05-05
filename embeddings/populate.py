@@ -46,6 +46,7 @@ def make_embeddings(wv, tfidf_dict):
             vbytes = json.dumps((vector * weight).tolist())
             embeddings.append(Embedding(
                 word=word,
+                count=wv.vocab[word].count,
                 vbytes=vbytes
             ))
         else:

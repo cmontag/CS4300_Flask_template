@@ -40,10 +40,10 @@ https://getbootstrap.com/docs/4.4/examples/cover/ -->
                <div class="collapse navbar-collapse flex-grow-0" id="navbarSupportedContent">
                   <ul class="navbar-nav text-right">
                      <li class="nav-item">
-                           <a class="nav-link" href="#">Right Link 1</a>
+                           <a class="nav-link" href="/">Home</a>
                      </li>
                      <li class="nav-item">
-                           <a class="nav-link" href="#">Right Link 2</a>
+                           <a class="nav-link" href="/how-it-works">How It Works</a>
                      </li>
                   </ul>
                </div>
@@ -80,18 +80,18 @@ https://getbootstrap.com/docs/4.4/examples/cover/ -->
                <p id="price-line" class="lead justify-content-between text-nowrap" style="display: flex;">
                   <span>It costs between </span>
                   <label class="sr-only" for="minprice-input">minimum price</label>
-                  <input id="minprice-input" type="text" name="minprice" class="form-control mb-2 mr-3" placeholder="any price">
+                  <input id="minprice-input" type="text" name="minprice" class="form-control mb-2 mr-3" placeholder="any price" autocomplete="off">
                   <span> and</span>
                   <label class="sr-only" for="maxprice-input">maximum price</label>
-                  <input id="maxprice-input" type="text" name="maxprice" class="form-control mb-2" placeholder="any price">
+                  <input id="maxprice-input" type="text" name="maxprice" class="form-control mb-2" placeholder="any price" autocomplete="off">
                </p>
                <p id="abv-line" class="lead justify-content-between text-nowrap" style="display: flex;">
                   <span>Its <span class="tooltip-underline" data-toggle="tooltip" data-placement="bottom" title="Alcohol by volume, or ABV, measures the percentage of alcohol contained in an alcoholic beverage">ABV</span> is between</span>
                   <label class="sr-only" for="minabv-input">minimum abv</label>
-                  <input id="minabv-input" type="text" name="minabv" class="form-control mb-2 mr-3" placeholder="any ABV">
+                  <input id="minabv-input" type="text" name="minabv" class="form-control mb-2 mr-3" placeholder="any ABV" autocomplete="off">
                   <span> and</span>
-                  <label class="sr-only" for="maxprice-input">maximum price</label>
-                  <input id="maxabv-input" type="text" name="maxabv" class="form-control mb-2" placeholder="any ABV">
+                  <label class="sr-only" for="maxprice-input">maximum abv</label>
+                  <input id="maxabv-input" type="text" name="maxabv" class="form-control mb-2" placeholder="any ABV" autocomplete="off">
                </p>
                <p class="lead mt-5 mx-auto">
                   <button type="submit" class="btn btn-lg btn-secondary">pick my poison</button>
@@ -111,24 +111,40 @@ https://getbootstrap.com/docs/4.4/examples/cover/ -->
       <script src="//code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
       <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
 
-      <!-- <script src="/static/tagsinput.js"></script>
-      <script src="/static/typeahead.bundle.min.js"></script> -->
+      <script src="/static/jquery.inputmask.min.js"></script>
       <script src="/static/jquery.tagsinput-revisited.js"></script>
       
       <script>
+         // flag for initial click on descriptors
+         var descriptors_clicked = false;
+
          $(function () {
             $('#descriptors-input_tag').tooltip({'placement': 'right', 'trigger':'focus', 'title': 'Start typing and select any number of descriptors from the dropdown'});
             $('[data-toggle="tooltip"]').tooltip();
          })
          
-         const descriptors = {{descriptors|tojson}};
+         const descriptors_all = {{descriptors|tojson}};
+         const descriptors_initial = descriptors_all.slice(0, 50);
          $('.tagsinput').tagsInput({
             'width': '100%',
             'placeholder': 'eg. "light bodied, luminous, lush"',
             'autocomplete': {
-               source: descriptors
+               source: descriptors_initial,
+               delay: 0,
+               minLength: 0
             },
-            'values': descriptors
+            'values': descriptors_all
+         });
+         $('#descriptors-input_tag').focus(function(){     
+            $(this).data("uiAutocomplete").search($(this).val());
+            if (!descriptors_clicked) {
+               $('#descriptors-input_tag').autocomplete({
+                  source: descriptors_all,
+                  delay: 0,
+                  minLength: 0
+               });
+               descriptors_clicked = true;
+            }
          });
 
          function checkCocktail(select) {
@@ -146,14 +162,61 @@ https://getbootstrap.com/docs/4.4/examples/cover/ -->
          $(function() {
             var availableTags = ['vodka', 'Midori', 'sloe', 'lychee', 'Chambord', 'Averna', 'beer', 'Campari', 'coffee', 'banana', 'sherry', 'Champagne', 'Mekhong', 'Jagermeister', 'Irish', 'Pimm', 'sake', 'nonalcoholic', 'RumChata', 'peach', 'absinthe', 'rum', 'Galliano', 'Southern', 'melon', 'Benedictine', 'brandy', 'tequila', 'pisco', 'shooter', 'chocolate', 'gin', 'Cointreau', 'whiskey', 'cachaca', 'Strega', 'vermouth', 'wine', 'cachaça', 'Frangelico', 'Grand', 'TyKu', 'Agavero'];
             $('#base-input').autocomplete({
-               source: availableTags
+               source: availableTags,
+               delay: 0,
+               minLength: 0
+            }).focus(function(){            
+               $(this).data("uiAutocomplete").search($(this).val());
             });
-         } );
+         });
 
          $(function() {
             $('.main-form').submit(function() {
                $(this).find(':input').filter(function(){ return !this.value; }).attr('disabled', 'disabled');
                return true; // ensure form still submits
+            });
+         });
+
+         // input masks
+         $(function() {
+            // price inputs
+            $('#minprice-input').inputmask('currency', {
+               prefix: '$',
+               showMaskOnHover: false,
+               rightAlign: false,
+               clearMaskOnLostFocus: true,
+               clearIncomplete: true,
+            });
+            $('#minprice-input').blur(function() {
+               if ($('#minprice-input').val() == '$0.00') {
+                  $('#minprice-input').val('');
+               }
+            });
+            $('#maxprice-input').inputmask('currency', {
+               prefix: "$",
+               showMaskOnHover: false,
+               rightAlign: false,
+               clearMaskOnLostFocus: true,
+               clearIncomplete: true,
+            });
+            $('#maxprice-input').blur(function() {
+               if ($('#maxprice-input').val() == '$0.00') {
+                  $('#maxprice-input').val('');
+               }
+            });
+
+            // abv inputs
+            $('#minabv-input').inputmask('percentage', {
+               showMaskOnHover: false,
+               rightAlign: false,
+               clearMaskOnLostFocus: true,
+               clearIncomplete: true,
+            });
+            $('#maxabv-input').inputmask('percentage', {
+               showMaskOnHover: false,
+               rightAlign: false,
+               clearMaskOnLostFocus: true,
+               clearIncomplete: true,
             });
          });
       </script>
