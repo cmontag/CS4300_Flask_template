@@ -115,6 +115,11 @@ https://getbootstrap.com/docs/4.4/examples/cover/ -->
       <script src="/static/jquery.tagsinput-revisited.js"></script>
       
       <script>
+         // clear descriptors on pageload (hotfix for back button bug)
+         $(window).bind("pageshow", function() {
+            $('#descriptors-input').val('');
+         });
+
          // flag for initial click on descriptors
          var descriptors_clicked = false;
 
