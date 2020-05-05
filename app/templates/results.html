@@ -54,7 +54,6 @@ https://getbootstrap.com/docs/4.4/examples/cover/ -->
          <main role="main" class="inner cover">
             <p class="lead text-center">here's what we've picked for you</p><hr class="fancy mt-4 mb-5" />
             <div class="text-left text-dark results-list"></div>
-            <div id="no-results" class="text-center" style="font-size: 1.5em;"></div>
             <div id="prefooter" class="text-center mt-5">
                <div id="loading-animation" class="sk-fading-circle" style="display: none;">
                   <div class="sk-circle1 sk-circle"></div>
@@ -148,12 +147,14 @@ https://getbootstrap.com/docs/4.4/examples/cover/ -->
                   if (count - ((page - 1) * 10 + results.length) > 1) {
                      $('#more-results').css('display', 'inline-block');
                   } else {
-                     $('#prefooter').append($('<hr id="all-results-divider" class="fancy mt-5 mb-4" />'));
-                     $('#prefooter').append($('<p id="all-results-text">all results loaded</p>'));                        
-                  }
-
-                  if (results.length == 0) {
-                     $('#no-results').append('<p>no matches &nbsp; :(</p>');
+                     var all_results = $('<p id="all-results-text"></p>');
+                     if (results.length == 0) {
+                        all_results.text('no matches found :(');
+                     } else {
+                        $('#prefooter').append($('<hr id="all-results-divider" class="fancy mt-5 mb-4" />'));
+                        all_results.text('all results loaded');
+                     }
+                     $('#prefooter').append(all_results);                        
                   }
                   
                   for (let i = 0; i < results.length; i++) {
@@ -175,9 +176,11 @@ https://getbootstrap.com/docs/4.4/examples/cover/ -->
                      header.append(icon);
                      var header_heading = $('<h2 class="mb-0 flex-grow-1"></h2>');
                      var header_heading_button = $('<button class="btn btn-link text-left" type="button" data-toggle="collapse" data-target="#collapse' + card_index + '" aria-controls="collapse' + card_index + '"></button>');
-                     header_heading_button.append('<strong>' + card_index + '.</strong> ' + results[i].drink.name);
+                     var heading_button_drink_name = $('<span class="drink-name"></span>');
+                     heading_button_drink_name.append('<strong>' + card_index + '.</strong> ' + results[i].drink.name);
+                     header_heading_button.append(heading_button_drink_name);
                      if (results[i].dist != null) {
-                        header_heading_button.append('<span style="float: right; margin-right: 0.5em;">' + results[i].dist + '% match</span>')
+                        header_heading_button.append('<span class="percentage-match text-right">' + results[i].dist + '% match</span>')
                      }
                      header_heading.append(header_heading_button);
                      header.append(header_heading);

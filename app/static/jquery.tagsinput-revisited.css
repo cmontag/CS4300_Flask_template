@@ -7,18 +7,11 @@
 	-ms-flex-wrap: wrap;
 	flex-wrap: wrap;
 	box-sizing: border-box;
-	/* background: #fff; */
-	/* font-family: sans-serif; */
 	border-bottom: 1px solid rgba(255, 255, 255, 0.5);
 	font-size: 0.7em;
 	width: 100%;
 	min-width: fit-content(1em);
 	margin-left: 1em;
-	/* line-height: 20px; */
-	/* color: #556270; */
-	/* padding: 5px 5px 0 5px; */
-	/* border: 1px solid #e6e6e6; */
-	/* border-radius: 2px; */
 }
 
 .tagsinput.focus {

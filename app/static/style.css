@@ -267,8 +267,24 @@ main .lead {
 .results-list .card-header button {
    position: relative;
    width: 100%;
+   display: flex;
+   align-items: center;
 }
-   
+
+.results-list .card-header button .drink-name {
+   position: relative;
+   display: inline-block;
+   flex-grow: 1;
+}
+
+.results-list .card-header button .percentage-match {
+   position: relative;
+   display: inline-block;
+   flex-shrink: 0;
+   font-size: 0.8em;
+   margin: 0 0.7em 0 0.8em;
+}
+
 .results-list .card-header button::after {
    content: "\f107";
    top: 0;
