@@ -1,0 +1,128 @@
+<!-- Code references:
+https://stackoverflow.com/questions/29738787/filling-water-animation/29740828#29740828
+https://www.mkronenfeld.de/filling-liquid-animation/
+https://stackoverflow.com/questions/24210132/remove-border-radius-from-select-tag-in-bootstrap-3/24766039
+https://getbootstrap.com/docs/4.4/examples/cover/ -->
+
+<!doctype html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <title>{% block title %}pick your poison{% endblock %}</title>
+      {% block toplinks %}
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+      <link rel="stylesheet" href="/static/css/style.css">
+      <script src="https://kit.fontawesome.com/3798c5de2c.js" crossorigin="anonymous"></script>
+      {% endblock %}
+      <link rel="apple-touch-icon" sizes="180x180" href="/static/favicon/apple-touch-icon.png">
+      <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon/favicon-32x32.png">
+      <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon/favicon-16x16.png">
+      <link rel="manifest" href="/static/favicon/site.webmanifest">
+      <link rel="mask-icon" href="/static/favicon/safari-pinned-tab.svg" color="#5bbad5">
+      <link rel="shortcut icon" href="/static/favicon/favicon.ico">
+      <meta name="msapplication-TileColor" content="#da532c">
+      <meta name="msapplication-config" content="/static/favicon/browserconfig.xml">
+      <meta name="theme-color" content="#ffffff">
+   </head>
+   <body{% block bodyclass %}{% endblock %}>
+
+      <!-- Wave Graphic -->
+      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" style="display: none;">
+         <symbol id="wave">
+            <path class="waveShape" d="M300 300V2.5s-.6-.1-1.1-.1c0 0-25.5-2.3-40.5-2.4-15 0-40.6 2.4-40.6 2.4-12.3 1.1-30.3 1.8-31.9 1.9-2-.1-19.7-.8-32-1.9 0 0-25.8-2.3-40.8-2.4-15 0-40.8 2.4-40.8 2.4-12.3 1.1-30.4 1.8-32 1.9-2-.1-20-.8-32.2-1.9 0 0-3.1-.3-8.1-.7V300h300z"/>
+         </symbol>
+      </svg>
+      <div class="liquid firstfill">
+         <svg viewBox="0 0 300 20" class="liquid__wave">
+            <use xlink:href="#wave"></use>
+         </svg>
+      </div>
+
+      <p class="lead loading-text text-center">one moment please...</p>
+      <div class="cover-container d-flex w-100 h-100 mx-auto flex-column">
+         <header class="masthead {% block headerclass %}text-center{% endblock %}">
+            <nav class="navbar navbar-dark justify-content-end">
+               <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
+                  <span class="navbar-toggler-icon"></span>
+               </button>
+               <div class="collapse navbar-collapse flex-grow-0" id="navbarSupportedContent">
+                  <ul class="navbar-nav text-right">
+                     <li class="nav-item">
+                           <a class="nav-link" href="/?fromtop=true">Home</a>
+                     </li>
+                     <li class="nav-item">
+                           <a class="nav-link" href="/how-it-works?fromtop=true">How It Works</a>
+                     </li>
+                  </ul>
+               </div>
+            </nav>
+            <div class="inner">
+               <h3 class="masthead-brand"><a href="/?fromtop=true">pick your poison</a></h3>
+            </div>
+         </header>
+
+         <main role="main" class="inner cover">{% block main %}{% endblock %}</main>
+
+         <footer class="mastfoot {% block footerclass %}text-center{% endblock %}">
+            {% block footer %}
+            <div class="inner">
+               <p>created by Derek Cheng, Collin Montag, DB Lee, Dana Luong, and Ishneet Sachar</p>
+            </div>
+            {% endblock %}
+         </footer>
+
+      </div>
+
+      <!-- Bootstrap JS -->
+      {% block bottomlinks %}
+      <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+      {% endblock %}
+
+      {% block script %}
+      <script>
+         var urlParams = new URLSearchParams(window.location.search);
+         fromtop = urlParams.get('fromtop');
+         if (fromtop) {
+            $('.loading-text').addClass('loadin');
+            $('.liquid').removeClass('firstfill');
+            $('.liquid').addClass('fromtop');
+            $('.cover-container').addClass('fadeinfast');
+         }
+
+         // rise liquid and fade out on navigation click
+         $('.nav-link, .masthead-brand a').click(function() {
+            event.preventDefault();
+            $('loading-text').removeClass('loadin');
+            const fillAnimation = document.querySelector('.liquid');
+            $('.liquid').removeClass('firstfill fromtop');
+            $('.liquid').addClass('totop');
+            $('.cover-container').removeClass('fadeinfast');
+            $('.cover-container').addClass('fadeout');
+            const loadAnimation = document.querySelector('.loading-text');
+            fillAnimation.onanimationend = () => {
+               $('.loading-text').addClass('loadout');
+            };
+            loadAnimation.onanimationend = () => {
+               window.location = $(this).attr('href');
+            }
+         });
+
+         const body = document.getElementsByTagName('body')[0];
+         const footer = document.getElementsByClassName('mastfoot')[0];
+         const main = document.getElementsByTagName('main')[0];
+         body.style.height = '100vh';
+         body.style.overflow = 'hidden';
+         
+         const fillAnimation = document.querySelector('.liquid');
+         fillAnimation.onanimationend = () => {
+            body.style.height = '100%';
+            body.style.overflow = 'visible';
+            $('.liquid').css('height', 'calc(100% - 15vw)');
+         };
+      </script>
+      {% endblock %}
+      
+   </body>
+</html>
