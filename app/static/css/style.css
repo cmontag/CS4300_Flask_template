@@ -8,7 +8,7 @@
 }
 
 .cover-container.fadeinfast {
-   animation: fadeinfast-action 2.5s;
+   animation: fadeinfast-action 2s;
 }
 
 .cover-container.fadeout {
@@ -35,10 +35,10 @@
    0% {
       opacity: 0;
    }
-   59% {
+   49% {
       opacity: 0;
    }
-   60% {
+   50% {
       opacity: 0;
    }
    100% {
@@ -106,6 +106,10 @@ body.search {
    max-width: 42em;
    z-index: 1;
    padding-top: 7%;
+}
+
+body.search .cover-container {
+   overflow: scroll; /* workaround for really short screens... */
 }
 
 /*
@@ -176,12 +180,12 @@ main .lead {
 }
 
 .liquid.totop {
-   animation: filltotop-action 1.5s linear 1 forwards;
+   animation: filltotop-action 1s linear 1 forwards;
 }
 
 .liquid.fromtop {
    transform: translate(0, 0);
-   animation: fillfromtop-action 1.5s linear 1 forwards;
+   animation: fillfromtop-action 1s linear 1 forwards;
 }
 
 .liquid__wave {
@@ -208,13 +212,13 @@ main .lead {
       margin-top: 15vw;
    }
    100% {
-      margin-top: 0;
+      margin-top: 10vw;
    }
 }
 
 @keyframes fillfromtop-action {
    0% {
-      margin-top: 0;
+      margin-top: 10vw;
    }
    100% {
       margin-top: 15vw;
