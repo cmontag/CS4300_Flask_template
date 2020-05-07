@@ -4,10 +4,19 @@
 
 /* Everything fade in */
 .cover-container {
-   animation: fadein 4s;
+   animation: fadein-action 4s;
 }
 
-@keyframes fadein {
+.cover-container.fadeinfast {
+   animation: fadeinfast-action 2.5s;
+}
+
+.cover-container.fadeout {
+   opacity: 0;
+   animation: fadeout-action 1s;
+}
+
+@keyframes fadein-action {
    0% {
       opacity: 0;
    }
@@ -19,6 +28,30 @@
    }
    100% {
       opacity: 1;
+   }
+}
+
+@keyframes fadeinfast-action {
+   0% {
+      opacity: 0;
+   }
+   59% {
+      opacity: 0;
+   }
+   60% {
+      opacity: 0;
+   }
+   100% {
+      opacity: 1;
+   }
+}
+
+@keyframes fadeout-action {
+   0% {
+      opacity: 1;
+   }
+   100% {
+      opacity: 0;
    }
 }
 
@@ -130,13 +163,25 @@ main .lead {
 .liquid {
    margin-top: 15vw;
    background-color: #663333;
-   height: calc(100% - 15vw);
-   /* height: 100%; */
+   /* height: calc(100% - 15vw); */
+   height: 100%;
    position: absolute;
-   transform: translate(0, 100%);
    width: 100%;
    z-index: 0;
+}
+
+.liquid.firstfill {
+   transform: translate(0, 100%);
    animation: fill-action 3s linear 1 forwards;
+}
+
+.liquid.totop {
+   animation: filltotop-action 1.5s linear 1 forwards;
+}
+
+.liquid.fromtop {
+   transform: translate(0, 0);
+   animation: fillfromtop-action 1.5s linear 1 forwards;
 }
 
 .liquid__wave {
@@ -155,6 +200,24 @@ main .lead {
    }
    100% {
       transform: translate(0, 0);
+   }
+}
+
+@keyframes filltotop-action {
+   0% {
+      margin-top: 15vw;
+   }
+   100% {
+      margin-top: 0;
+   }
+}
+
+@keyframes fillfromtop-action {
+   0% {
+      margin-top: 0;
+   }
+   100% {
+      margin-top: 15vw;
    }
 }
 

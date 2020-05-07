@@ -1,229 +1,207 @@
-<!-- Code references:
-https://stackoverflow.com/questions/29738787/filling-water-animation/29740828#29740828
-https://www.mkronenfeld.de/filling-liquid-animation/
-https://stackoverflow.com/questions/24210132/remove-border-radius-from-select-tag-in-bootstrap-3/24766039
-https://getbootstrap.com/docs/4.4/examples/cover/ -->
+{% extends "base.html" %}
+{% block toplinks %}
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+   <link rel="stylesheet" href="/static/css/style.css">
+   <link rel="stylesheet" href="/static/css/jquery.tagsinput-revisited.css">
+   <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+   <script src="https://kit.fontawesome.com/3798c5de2c.js" crossorigin="anonymous"></script>
+{% endblock %}
+{% block bodyclass %} class="text-center search"{% endblock %}
+{% block headerclass %}mb-auto{% endblock %}
+{% block main %}
+   <form class="main-form" method="GET" action="/search">
+      <input type="hidden" name="page" value="0" />
+      <input type="hidden" name="fromtop" value="true" />
+      <p class="lead d-flex justify-content-between text-nowrap">
+         <span>I would like to drink </span>
+         <label class="sr-only" for="type-input">drink type</label>
+         <select id="type-input" name="type" class="form-control mb-2" onchange="checkCocktail(this);">
+            <option>anything</option>
+            <option>wine</option>
+            <option>beer</option>
+            <option>liquor</option>
+            <option>cocktail</option>
+         </select>
+      </p>
+      <p id="base-line" class="lead justify-content-between text-nowrap" style="display: none;">
+         <span>I want the base to be </span>
+         <label class="sr-only" for="base-input">base</label>
+         <input id="base-input" type="text" name="base" class="form-control mb-2" placeholder="any base">
+      </p>
+      <p class="lead d-flex justify-content-between text-nowrap">
+         <span>It should be </span>
+         <label class="sr-only" for="descriptors-input">descriptors</label>
+         <input id="descriptors-input" type="text" name="descriptors" class="form-control mb-2 tagsinput">
+      </p>
+      <p id="price-line" class="lead justify-content-between text-nowrap" style="display: flex;">
+         <span>It costs between </span>
+         <label class="sr-only" for="minprice-input">minimum price</label>
+         <input id="minprice-input" type="text" name="minprice" class="form-control mb-2 mr-3" placeholder="any price" autocomplete="off">
+         <span> and</span>
+         <label class="sr-only" for="maxprice-input">maximum price</label>
+         <input id="maxprice-input" type="text" name="maxprice" class="form-control mb-2" placeholder="any price" autocomplete="off">
+      </p>
+      <p id="abv-line" class="lead justify-content-between text-nowrap" style="display: flex;">
+         <span>Its <span class="tooltip-underline" data-toggle="tooltip" data-placement="bottom" title="Alcohol by volume, or ABV, measures the percentage of alcohol contained in an alcoholic beverage">ABV</span> is between</span>
+         <label class="sr-only" for="minabv-input">minimum abv</label>
+         <input id="minabv-input" type="text" name="minabv" class="form-control mb-2 mr-3" placeholder="any ABV" autocomplete="off">
+         <span> and</span>
+         <label class="sr-only" for="maxprice-input">maximum abv</label>
+         <input id="maxabv-input" type="text" name="maxabv" class="form-control mb-2" placeholder="any ABV" autocomplete="off">
+      </p>
+      <p class="lead mt-5 mx-auto">
+         <button type="submit" class="btn btn-lg btn-secondary">pick my poison</button>
+      </p>
+   </form>
+{% endblock %}
+{% block footerclass %}mt-auto{% endblock %}
+{% block bottomlinks %}
+   <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+   <script src="/static/js/jquery.inputmask.min.js"></script>
+   <script src="/static/js/jquery.tagsinput-revisited.js"></script>
+{% endblock %}
+{% block script %}
+   <script>
+      var urlParams = new URLSearchParams(window.location.search);
+      fromtop = urlParams.get('fromtop');
+      if (fromtop) {
+         $('.liquid').removeClass('firstfill');
+         $('.liquid').addClass('fromtop');
+         $('.cover-container').addClass('fadeinfast');
+      }
 
-<!doctype html>
-<html lang="en">
-   <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-      <title>pick your poison</title>
+      // rise liquid and fade out on navigation click
+      $('.nav-link, .masthead-brand a').click(function() {
+         event.preventDefault();
+         const fillAnimation = document.querySelector('.liquid');
+         $('.liquid').removeClass('firstfill fromtop');
+         $('.liquid').addClass('totop');
+         $('.cover-container').removeClass('fadeinfast');
+         $('.cover-container').addClass('fadeout');
+         console.log('test');
+         fillAnimation.onanimationend = () => {
+            console.log('test');
+            window.location = $(this).attr('href');
+         };
+      });
 
-      <link rel="stylesheet" href="/static/bootstrap.min.css">
-      <link rel="stylesheet" href="/static/style.css">
-      <link rel="stylesheet" type="text/css" href="/static/jquery.tagsinput-revisited.css">
-      <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-      <script src="https://kit.fontawesome.com/3798c5de2c.js" crossorigin="anonymous"></script>
-   </head>
-   <body class="text-center search">
+      // clear descriptors on pageload (hotfix for back button bug)
+      $(window).bind("pageshow", function() {
+         $('#descriptors-input').val('');
+      });
 
-      <!-- Wave Graphic -->
-      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" style="display: none;">
-         <symbol id="wave">
-            <path class="waveShape" d="M300 300V2.5s-.6-.1-1.1-.1c0 0-25.5-2.3-40.5-2.4-15 0-40.6 2.4-40.6 2.4-12.3 1.1-30.3 1.8-31.9 1.9-2-.1-19.7-.8-32-1.9 0 0-25.8-2.3-40.8-2.4-15 0-40.8 2.4-40.8 2.4-12.3 1.1-30.4 1.8-32 1.9-2-.1-20-.8-32.2-1.9 0 0-3.1-.3-8.1-.7V300h300z"/>
-         </symbol>
-      </svg>
-      <div class="liquid">
-         <svg viewBox="0 0 300 20" class="liquid__wave">
-            <use xlink:href="#wave"></use>
-         </svg>
-      </div>
+      // flag for initial click on descriptors
+      var descriptors_clicked = false;
 
-      <div class="cover-container d-flex w-100 h-100 mx-auto flex-column">
-         <header class="masthead mb-auto">
-            <nav class="navbar navbar-dark justify-content-end">
-               <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
-                  <span class="navbar-toggler-icon"></span>
-               </button>
-               <div class="collapse navbar-collapse flex-grow-0" id="navbarSupportedContent">
-                  <ul class="navbar-nav text-right">
-                     <li class="nav-item">
-                           <a class="nav-link" href="/">Home</a>
-                     </li>
-                     <li class="nav-item">
-                           <a class="nav-link" href="/how-it-works">How It Works</a>
-                     </li>
-                  </ul>
-               </div>
-            </nav>
-            <div class="inner">
-               <h3 class="masthead-brand"><a href="/">pick your poison</a></h3>
-            </div>
-         </header>
+      $(function () {
+         $('#descriptors-input_tag').tooltip({'placement': 'right', 'trigger':'focus', 'title': 'Start typing and select any number of descriptors from the dropdown'});
+         $('[data-toggle="tooltip"]').tooltip();
+      })
 
-         <main role="main" class="inner cover">
-            <form class="main-form" method="GET" action="/search">
-               <input type="hidden" name="page" value="0" />
-               <p class="lead d-flex justify-content-between text-nowrap">
-                  <span>I would like to drink </span>
-                  <label class="sr-only" for="type-input">drink type</label>
-                  <select id="type-input" name="type" class="form-control mb-2" onchange="checkCocktail(this);">
-                     <option>anything</option>
-                     <option>wine</option>
-                     <option>beer</option>
-                     <option>liquor</option>
-                     <option>cocktail</option>
-                  </select>
-               </p>
-               <p id="base-line" class="lead justify-content-between text-nowrap" style="display: none;">
-                  <span>I want the base to be </span>
-                  <label class="sr-only" for="base-input">base</label>
-                  <input id="base-input" type="text" name="base" class="form-control mb-2" placeholder="any base">
-               </p>
-               <p class="lead d-flex justify-content-between text-nowrap">
-                  <span>It should be </span>
-                  <label class="sr-only" for="descriptors-input">descriptors</label>
-                  <input id="descriptors-input" type="text" name="descriptors" class="form-control mb-2 tagsinput">
-               </p>
-               <p id="price-line" class="lead justify-content-between text-nowrap" style="display: flex;">
-                  <span>It costs between </span>
-                  <label class="sr-only" for="minprice-input">minimum price</label>
-                  <input id="minprice-input" type="text" name="minprice" class="form-control mb-2 mr-3" placeholder="any price" autocomplete="off">
-                  <span> and</span>
-                  <label class="sr-only" for="maxprice-input">maximum price</label>
-                  <input id="maxprice-input" type="text" name="maxprice" class="form-control mb-2" placeholder="any price" autocomplete="off">
-               </p>
-               <p id="abv-line" class="lead justify-content-between text-nowrap" style="display: flex;">
-                  <span>Its <span class="tooltip-underline" data-toggle="tooltip" data-placement="bottom" title="Alcohol by volume, or ABV, measures the percentage of alcohol contained in an alcoholic beverage">ABV</span> is between</span>
-                  <label class="sr-only" for="minabv-input">minimum abv</label>
-                  <input id="minabv-input" type="text" name="minabv" class="form-control mb-2 mr-3" placeholder="any ABV" autocomplete="off">
-                  <span> and</span>
-                  <label class="sr-only" for="maxprice-input">maximum abv</label>
-                  <input id="maxabv-input" type="text" name="maxabv" class="form-control mb-2" placeholder="any ABV" autocomplete="off">
-               </p>
-               <p class="lead mt-5 mx-auto">
-                  <button type="submit" class="btn btn-lg btn-secondary">pick my poison</button>
-               </p>
-            </form>
-         </main>
-
-         <footer class="mastfoot mt-auto">
-            <div class="inner">
-               <p>created by Derek Cheng, Collin Montag, DB Lee, Dana Luong, and Ishneet Sachar</p>
-            </div>
-         </footer>
-      </div>
-   
-      <!-- Bootstrap JS -->
-      <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
-      <script src="//code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
-      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-
-      <script src="/static/jquery.inputmask.min.js"></script>
-      <script src="/static/jquery.tagsinput-revisited.js"></script>
-      
-      <script>
-         // clear descriptors on pageload (hotfix for back button bug)
-         $(window).bind("pageshow", function() {
-            $('#descriptors-input').val('');
-         });
-
-         // flag for initial click on descriptors
-         var descriptors_clicked = false;
-
-         $(function () {
-            $('#descriptors-input_tag').tooltip({'placement': 'right', 'trigger':'focus', 'title': 'Start typing and select any number of descriptors from the dropdown'});
-            $('[data-toggle="tooltip"]').tooltip();
-         })
-         
-         const descriptors_all = {{descriptors|tojson}};
-         const descriptors_initial = descriptors_all.slice(0, 50);
-         $('.tagsinput').tagsInput({
-            'width': '100%',
-            'placeholder': 'eg. "light bodied, luminous, lush"',
-            'autocomplete': {
-               source: descriptors_initial,
+      const descriptors_all = {{descriptors|tojson}};
+      const descriptors_initial = descriptors_all.slice(0, 50);
+      $('.tagsinput').tagsInput({
+         'width': '100%',
+         'placeholder': 'eg. "light bodied, luminous, lush"',
+         'autocomplete': {
+            source: descriptors_initial,
+            delay: 0,
+            minLength: 0
+         },
+         'values': descriptors_all
+      });
+      $('#descriptors-input_tag').focus(function(){     
+         $(this).data("uiAutocomplete").search($(this).val());
+         if (!descriptors_clicked) {
+            $('#descriptors-input_tag').autocomplete({
+               source: descriptors_all,
                delay: 0,
                minLength: 0
-            },
-            'values': descriptors_all
-         });
-         $('#descriptors-input_tag').focus(function(){     
-            $(this).data("uiAutocomplete").search($(this).val());
-            if (!descriptors_clicked) {
-               $('#descriptors-input_tag').autocomplete({
-                  source: descriptors_all,
-                  delay: 0,
-                  minLength: 0
-               });
-               descriptors_clicked = true;
-            }
-         });
-
-         function checkCocktail(select) {
-            if (select.value == 'cocktail') {
-               document.getElementById('base-line').style.display = 'flex';
-               document.getElementById('price-line').style.display = 'none';
-               document.getElementById('abv-line').style.display = 'none';
-            } else {
-               document.getElementById('base-line').style.display = 'none';
-               document.getElementById('price-line').style.display = 'flex';
-               document.getElementById('abv-line').style.display = 'flex';
-            }
+            });
+            descriptors_clicked = true;
          }
+      });
 
-         $(function() {
-            var availableTags = ['vodka', 'Midori', 'sloe', 'lychee', 'Chambord', 'Averna', 'beer', 'Campari', 'coffee', 'banana', 'sherry', 'Champagne', 'Mekhong', 'Jagermeister', 'Irish', 'Pimm', 'sake', 'nonalcoholic', 'RumChata', 'peach', 'absinthe', 'rum', 'Galliano', 'Southern', 'melon', 'Benedictine', 'brandy', 'tequila', 'pisco', 'shooter', 'chocolate', 'gin', 'Cointreau', 'whiskey', 'cachaca', 'Strega', 'vermouth', 'wine', 'cachaça', 'Frangelico', 'Grand', 'TyKu', 'Agavero'];
-            $('#base-input').autocomplete({
-               source: availableTags,
-               delay: 0,
-               minLength: 0
-            }).focus(function(){            
-               $(this).data("uiAutocomplete").search($(this).val());
-            });
+      function checkCocktail(select) {
+         if (select.value == 'cocktail') {
+            document.getElementById('base-line').style.display = 'flex';
+            document.getElementById('price-line').style.display = 'none';
+            document.getElementById('abv-line').style.display = 'none';
+         } else {
+            document.getElementById('base-line').style.display = 'none';
+            document.getElementById('price-line').style.display = 'flex';
+            document.getElementById('abv-line').style.display = 'flex';
+         }
+      }
+
+      $(function() {
+         var availableTags = ['vodka', 'Midori', 'sloe', 'lychee', 'Chambord', 'Averna', 'beer', 'Campari', 'coffee', 'banana', 'sherry', 'Champagne', 'Mekhong', 'Jagermeister', 'Irish', 'Pimm', 'sake', 'nonalcoholic', 'RumChata', 'peach', 'absinthe', 'rum', 'Galliano', 'Southern', 'melon', 'Benedictine', 'brandy', 'tequila', 'pisco', 'shooter', 'chocolate', 'gin', 'Cointreau', 'whiskey', 'cachaca', 'Strega', 'vermouth', 'wine', 'cachaça', 'Frangelico', 'Grand', 'TyKu', 'Agavero'];
+         $('#base-input').autocomplete({
+            source: availableTags,
+            delay: 0,
+            minLength: 0
+         }).focus(function(){            
+            $(this).data("uiAutocomplete").search($(this).val());
+         });
+      });
+
+      $('form').submit(function(event) {
+         // liquid rises to top
+         event.preventDefault();
+         var form = this;
+         const fillAnimation = document.querySelector('.liquid');
+         $('.liquid').removeClass('firstfill fromtop');
+         $('.liquid').addClass('totop');
+         $('.cover-container').addClass('fadeout');
+         fillAnimation.onanimationend = () => {
+            $(this).find(':input').filter(function(){ return !this.value; }).attr('disabled', 'disabled');
+            form.submit();
+         };
+      });
+
+      // input masks
+      $(function() {
+         // price inputs
+         $('#minprice-input').inputmask('currency', {
+            prefix: '$',
+            showMaskOnHover: false,
+            rightAlign: false,
+            clearMaskOnLostFocus: true,
+            clearIncomplete: true,
+         });
+         $('#minprice-input').blur(function() {
+            if ($('#minprice-input').val() == '$0.00') {
+               $('#minprice-input').val('');
+            }
+         });
+         $('#maxprice-input').inputmask('currency', {
+            prefix: "$",
+            showMaskOnHover: false,
+            rightAlign: false,
+            clearMaskOnLostFocus: true,
+            clearIncomplete: true,
+         });
+         $('#maxprice-input').blur(function() {
+            if ($('#maxprice-input').val() == '$0.00') {
+               $('#maxprice-input').val('');
+            }
          });
 
-         $(function() {
-            $('.main-form').submit(function() {
-               $(this).find(':input').filter(function(){ return !this.value; }).attr('disabled', 'disabled');
-               return true; // ensure form still submits
-            });
+         // abv inputs
+         $('#minabv-input').inputmask('percentage', {
+            showMaskOnHover: false,
+            rightAlign: false,
+            clearMaskOnLostFocus: true,
+            clearIncomplete: true,
          });
-
-         // input masks
-         $(function() {
-            // price inputs
-            $('#minprice-input').inputmask('currency', {
-               prefix: '$',
-               showMaskOnHover: false,
-               rightAlign: false,
-               clearMaskOnLostFocus: true,
-               clearIncomplete: true,
-            });
-            $('#minprice-input').blur(function() {
-               if ($('#minprice-input').val() == '$0.00') {
-                  $('#minprice-input').val('');
-               }
-            });
-            $('#maxprice-input').inputmask('currency', {
-               prefix: "$",
-               showMaskOnHover: false,
-               rightAlign: false,
-               clearMaskOnLostFocus: true,
-               clearIncomplete: true,
-            });
-            $('#maxprice-input').blur(function() {
-               if ($('#maxprice-input').val() == '$0.00') {
-                  $('#maxprice-input').val('');
-               }
-            });
-
-            // abv inputs
-            $('#minabv-input').inputmask('percentage', {
-               showMaskOnHover: false,
-               rightAlign: false,
-               clearMaskOnLostFocus: true,
-               clearIncomplete: true,
-            });
-            $('#maxabv-input').inputmask('percentage', {
-               showMaskOnHover: false,
-               rightAlign: false,
-               clearMaskOnLostFocus: true,
-               clearIncomplete: true,
-            });
+         $('#maxabv-input').inputmask('percentage', {
+            showMaskOnHover: false,
+            rightAlign: false,
+            clearMaskOnLostFocus: true,
+            clearIncomplete: true,
          });
-      </script>
-   </body>
-</html>
+      });
+   </script>
+{% endblock %}
