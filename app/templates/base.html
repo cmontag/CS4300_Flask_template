@@ -39,6 +39,7 @@ https://getbootstrap.com/docs/4.4/examples/cover/ -->
          </svg>
       </div>
 
+      <p class="lead loading-text text-center">one moment please...</p>
       <div class="cover-container d-flex w-100 h-100 mx-auto flex-column">
          <header class="masthead {% block headerclass %}text-center{% endblock %}">
             <nav class="navbar navbar-dark justify-content-end">
@@ -84,6 +85,7 @@ https://getbootstrap.com/docs/4.4/examples/cover/ -->
          var urlParams = new URLSearchParams(window.location.search);
          fromtop = urlParams.get('fromtop');
          if (fromtop) {
+            $('.loading-text').addClass('loadin');
             $('.liquid').removeClass('firstfill');
             $('.liquid').addClass('fromtop');
             $('.cover-container').addClass('fadeinfast');
@@ -92,16 +94,19 @@ https://getbootstrap.com/docs/4.4/examples/cover/ -->
          // rise liquid and fade out on navigation click
          $('.nav-link, .masthead-brand a').click(function() {
             event.preventDefault();
+            $('loading-text').removeClass('loadin');
             const fillAnimation = document.querySelector('.liquid');
             $('.liquid').removeClass('firstfill fromtop');
             $('.liquid').addClass('totop');
             $('.cover-container').removeClass('fadeinfast');
             $('.cover-container').addClass('fadeout');
-            console.log('test');
+            const loadAnimation = document.querySelector('.loading-text');
             fillAnimation.onanimationend = () => {
-               console.log('test');
-               window.location = $(this).attr('href');
+               $('.loading-text').addClass('loadout');
             };
+            loadAnimation.onanimationend = () => {
+               window.location = $(this).attr('href');
+            }
          });
 
          const body = document.getElementsByTagName('body')[0];

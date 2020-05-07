@@ -108,6 +108,46 @@ body.search {
    padding-top: 7%;
 }
 
+/* Loading Text */
+p.loading-text {
+   width: 100%;
+   position: absolute;
+   top: 50vh;
+   font-size: 2em;
+   visibility: hidden;
+}
+
+p.loading-text.loadin {
+   animation: loadin-action 0.5s;
+}
+
+p.loading-text.loadout {
+   visibility: visible;
+   animation: loadout-action 0.5s;
+}
+
+@keyframes loadin-action {
+   0% {
+      visibility: visible;
+      opacity: 1;
+   }
+   100% {
+      visibility: hidden;
+      opacity: 0;
+   }
+}
+
+@keyframes loadout-action {
+   0% {
+      visibility: hidden;
+      opacity: 0;
+   }
+   100% {
+      visibility: visible;
+      opacity: 1;
+   }
+}
+
 /*
  * Header
  */

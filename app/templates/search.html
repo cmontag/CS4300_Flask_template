@@ -67,6 +67,7 @@
       var urlParams = new URLSearchParams(window.location.search);
       fromtop = urlParams.get('fromtop');
       if (fromtop) {
+         $('.loading-text').addClass('loadin');
          $('.liquid').removeClass('firstfill');
          $('.liquid').addClass('fromtop');
          $('.cover-container').addClass('fadeinfast');
@@ -75,16 +76,19 @@
       // rise liquid and fade out on navigation click
       $('.nav-link, .masthead-brand a').click(function() {
          event.preventDefault();
+         $('loading-text').removeClass('loadin');
          const fillAnimation = document.querySelector('.liquid');
          $('.liquid').removeClass('firstfill fromtop');
          $('.liquid').addClass('totop');
          $('.cover-container').removeClass('fadeinfast');
          $('.cover-container').addClass('fadeout');
-         console.log('test');
+         const loadAnimation = document.querySelector('.loading-text');
          fillAnimation.onanimationend = () => {
-            console.log('test');
-            window.location = $(this).attr('href');
+            $('.loading-text').addClass('loadout');
          };
+         loadAnimation.onanimationend = () => {
+            window.location = $(this).attr('href');
+         }
       });
 
       // clear descriptors on pageload (hotfix for back button bug)
@@ -150,15 +154,20 @@
       $('form').submit(function(event) {
          // liquid rises to top
          event.preventDefault();
+         $('loading-text').removeClass('loadin');
          var form = this;
          const fillAnimation = document.querySelector('.liquid');
          $('.liquid').removeClass('firstfill fromtop');
          $('.liquid').addClass('totop');
          $('.cover-container').addClass('fadeout');
+         const loadAnimation = document.querySelector('.loading-text');
          fillAnimation.onanimationend = () => {
+            $('.loading-text').addClass('loadout');
+         };
+         loadAnimation.onanimationend = () => {
             $(this).find(':input').filter(function(){ return !this.value; }).attr('disabled', 'disabled');
             form.submit();
-         };
+         }
       });
 
       // input masks

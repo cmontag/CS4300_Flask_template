@@ -3,6 +3,7 @@ var urlParams = new URLSearchParams(window.location.search);
 // liquid descends from top
 fromtop = urlParams.get('fromtop');
 if (fromtop) {
+   $('.loading-text').addClass('loadin');
    $('.liquid').removeClass('firstfill');
    $('.liquid').addClass('fromtop');
    $('.cover-container').addClass('fadeinfast');
@@ -11,16 +12,19 @@ if (fromtop) {
 // rise liquid and fade out on navigation click
 $('.nav-link, .masthead-brand a').click(function() {
    event.preventDefault();
+   $('loading-text').removeClass('loadin');
    const fillAnimation = document.querySelector('.liquid');
    $('.liquid').removeClass('firstfill fromtop');
    $('.liquid').addClass('totop');
    $('.cover-container').removeClass('fadeinfast');
    $('.cover-container').addClass('fadeout');
-   console.log('test');
+   const loadAnimation = document.querySelector('.loading-text');
    fillAnimation.onanimationend = () => {
-      console.log('test');
-      window.location = $(this).attr('href');
+      $('.loading-text').addClass('loadout');
    };
+   loadAnimation.onanimationend = () => {
+      window.location = $(this).attr('href');
+   }
 });
 
 page = parseInt(urlParams.get('page'))
@@ -148,7 +152,7 @@ function loadMore() {
             if (results[i].drink.origin != null && !isNaN(results[i].drink.origin)) {
                info_body.append($('<p><strong>Origin:</strong> ' + results[i].drink.origin + '</p>'));
             }
-            info_body.append($('<a href="/search?page=0&drink=' + results[i].drink.name + '" class="btn btn-outline-primary mr-1">Find similar drinks</a>'));
+            info_body.append($('<a href="/search?fromtop=true&page=0&drink=' + results[i].drink.name + '" class="btn btn-outline-primary mr-1">Find similar drinks</a>'));
             info_body.append('\n');
             var urlMsg = (results[i].drink.price != null) ? 'Order online' : 'Learn more'
             info_body.append($('<a href="' + results[i].drink.url + '" class="btn btn-outline-primary">' + urlMsg + '</a>'));
