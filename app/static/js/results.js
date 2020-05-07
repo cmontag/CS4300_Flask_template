@@ -155,7 +155,7 @@ function loadMore() {
             info_body.append($('<a href="/search?fromtop=true&page=0&drink=' + results[i].drink.name + '" class="btn btn-outline-primary mr-1">Find similar drinks</a>'));
             info_body.append('\n');
             var urlMsg = (results[i].drink.price != null) ? 'Order online' : 'Learn more'
-            info_body.append($('<a href="' + results[i].drink.url + '" class="btn btn-outline-primary">' + urlMsg + '</a>'));
+            info_body.append($('<a href="' + results[i].drink.url + '" class="btn btn-outline-primary" target="_blank">' + urlMsg + '</a>'));
 
             // add reviews tab if there are reviews
             if (results[i].reviews.length != 0) {
