@@ -24,7 +24,7 @@ def train(norm_sentences, phraser):
 
     print('Training model...')
     model = Word2Vec(final_sentences, size=300, min_count=5, iter=15)
-    # model.save('embeddings/trained/model.bin')
+    model.save('embeddings/trained/model.bin')
     return model
 
 def extract_desc(lst, phraser):
@@ -104,33 +104,6 @@ def make_drinks(df, descriptors, dtype, wv, tfidf_dict, min_desc):
 def main(model_file=None, phraser_file=None, tfidf_file=None, wine_size=None,
          beer_size=None, add_embeddings=True, add_drinks=True, use_reviews=True,
          min_desc=4):
-    if model_file is None or phraser_file is None:
-        print('Fetching wine training data...')
-        wine_train_data = get_wine_train_data(wine_size)
-        wine_train_desc = [str(x) for x in list(wine_train_data['description'])]
-        print('Fetching beer training data...')
-        beer_train_data = get_beer_train_data(beer_size)
-        beer_train_desc = [str(x) for x in list(beer_train_data['review/text'])]
-        full_text = ' '.join(wine_train_desc + beer_train_desc)
-        print('Preprocessing data...')
-        # List of strings for each sentence in corpus
-        sentences = sent_tokenize(full_text)
-        norm_sentences = [normalize(s) for s in sentences]
-
-    if phraser_file is None:
-        print('Training phraser...')
-        bigram = Phrases(norm_sentences)
-        trigram = Phrases(bigram[norm_sentences])
-        phraser = Phraser(trigram)
-        # phraser.save('embeddings/trained/trigram.pkl')
-    else:
-        phraser = Phraser.load(phraser_file)
-
-    if model_file is None:
-        model = train(norm_sentences, phraser)
-    else:
-        model = Word2Vec.load(model_file)
-
     print('Fetching drink data to populate database...')
     wines = get_wines()
     beers = get_beers()
@@ -151,6 +124,33 @@ def main(model_file=None, phraser_file=None, tfidf_file=None, wine_size=None,
         wine_desc = list(wines['description'].fillna(''))
         beer_desc = list(beers['description'].fillna(''))
         liquor_desc = list(liquors['description'].fillna(''))
+    
+    if model_file is None or phraser_file is None:
+        print('Fetching wine training data...')
+        wine_train_data = get_wine_train_data(wine_size)
+        wine_train_desc = [str(x) for x in list(wine_train_data['description'])]
+        print('Fetching beer training data...')
+        beer_train_data = get_beer_train_data(beer_size)
+        beer_train_desc = [str(x) for x in list(beer_train_data['review/text'])]
+        full_text = ' '.join(wine_train_desc + beer_train_desc + wine_desc + beer_desc + liquor_desc + cocktail_desc)
+        print('Preprocessing data...')
+        # List of strings for each sentence in corpus
+        sentences = sent_tokenize(full_text)
+        norm_sentences = [normalize(s) for s in sentences]
+
+    if phraser_file is None:
+        print('Training phraser...')
+        bigram = Phrases(norm_sentences)
+        trigram = Phrases(bigram[norm_sentences])
+        phraser = Phraser(trigram)
+        # phraser.save('embeddings/trained/trigram.pkl')
+    else:
+        phraser = Phraser.load(phraser_file)
+
+    if model_file is None:
+        model = train(norm_sentences, phraser)
+    else:
+        model = Word2Vec.load(model_file)
 
     # List of descriptor words for each drink description
     print('Extracting descriptors...')
@@ -192,8 +192,8 @@ def main(model_file=None, phraser_file=None, tfidf_file=None, wine_size=None,
         print('{} Drinks added to database!'.format(len(drinks)))
 
 main(
-    model_file='embeddings/trained/model_50k.bin',
-    phraser_file='embeddings/trained/trigram_50k.pkl',
+    model_file='embeddings/trained/model.bin',
+    phraser_file='embeddings/trained/trigram.pkl',
     tfidf_file='embeddings/trained/tfidf_p4.pkl',
     # add_embeddings=False,
     # add_drinks=False,
