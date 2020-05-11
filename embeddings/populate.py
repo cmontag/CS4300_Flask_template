@@ -24,7 +24,7 @@ def train(norm_sentences, phraser):
 
     print('Training model...')
     model = Word2Vec(final_sentences, size=300, min_count=5, iter=15)
-    model.save('embeddings/trained/model.bin')
+    # model.save('embeddings/trained/model.bin')
     return model
 
 def extract_desc(lst, phraser):
