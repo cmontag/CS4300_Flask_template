@@ -135,7 +135,11 @@ function loadMore() {
             var info_body = $('<div class="card-body text-dark no-reviews"></div>');
             info_body.append($('<h4>About this ' + results[i].drink.type + '</h4>'));
             if (results[i].drink.description != null && /\S/.test(results[i].drink.description)) {
-               info_body.append($('<p>' + results[i].drink.description + '</p>'));
+               var description = $('<p>' + results[i].drink.description + '</p>')
+               description.wrapInTag({
+                  words: results[i].keywords
+               });
+               info_body.append(description);
             }
             if (results[i].drink.rating != null) {
                var rating_split = results[i].drink.rating.split('/')
@@ -171,7 +175,11 @@ function loadMore() {
                results[i].reviews.forEach(review => {
                   if (review.body != null) {
                      var review_quote = $('<blockquote class="blockquote"></blockquote>');
-                     review_quote.append($('<p class="mb-0">' + review.body + '</p>'));
+                     var body = $('<p class="mb-0">' + review.body + '</p>')
+                     body.wrapInTag({
+                        words: results[i].keywords
+                     });
+                     review_quote.append(body);
                      var review_footer = $('<footer class="blockquote-footer"></footer>');
                      review_footer.append('Reviewed by <cite>' + review.author + '</cite>' + (review.date != null ? ' on ' + review.date : '') + ' (Rating: ' + review.rating + ')');
                      review_quote.append(review_footer);
@@ -218,3 +226,15 @@ loadMore();
 $(function() {
    $('#more-results').bind('click', loadMore);
 });
+
+$.fn.wrapInTag = function(opts) {
+  
+  var tag = opts.tag || 'strong',
+      words = opts.words || [],
+      regex = RegExp(words.join('|'), 'gi'),
+      replacement = '<'+ tag +'>$&</'+ tag +'>';
+  
+  return this.html(function() {
+    return $(this).text().replace(regex, replacement);
+  });
+};
