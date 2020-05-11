@@ -1,8 +1,8 @@
 from . import *
 from app.irsystem.models.helpers import *
 from app.irsystem.models.helpers import NumpyEncoder as NumpyEncoder
-from app.irsystem.models.search import make_query, search_drinks, extract_keywords, Args
-from app.irsystem.models.database import query_embeddings, query_drink, Drink
+from app.irsystem.models.search import make_query, search_drinks, extract_keywords, Args, EMBEDDINGS
+from app.irsystem.models.database import query_drink, Drink
 from flask import jsonify
 from uuid import uuid4
 import json
@@ -35,7 +35,7 @@ def make_args(args):
 
 @irsystem.route('/descriptors', methods=['GET'])
 def serve_desc():
-	descriptors = sorted([e.word for e in query_embeddings()])
+	descriptors = sorted([e.word for e in EMBEDDINGS])
 	descriptors = [d.replace('_', ' ') for d in descriptors]
 	return render_template('desc_list.html', descriptors=descriptors)
 
@@ -91,6 +91,6 @@ def explanation():
 
 @irsystem.route('/', methods=['GET'])
 def home():
-	embeddings = sorted(query_embeddings(), key=lambda e: e.count, reverse=True)
+	embeddings = sorted(EMBEDDINGS, key=lambda e: e.count, reverse=True)
 	descriptors = [e.word.replace('_', ' ') for e in embeddings]
 	return render_template('search.html', descriptors=descriptors)

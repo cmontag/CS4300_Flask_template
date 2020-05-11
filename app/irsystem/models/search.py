@@ -15,6 +15,7 @@ STEMMER = SnowballStemmer('english')
 PUNC_TABLE = str.maketrans({c: None for c in string.punctuation})
 STOP_WORDS = set(stopwords.words('english'))
 PHRASER = Phraser.load('app/static/trigram.pkl')
+EMBEDDINGS = query_embeddings()
 
 SEARCH_THRESH = 0.5
 KEYWORD_THRESH = 0.7
@@ -47,7 +48,7 @@ def make_query(data):
         return np.array(json.loads(vbytes)), data
     # Form query vector from word embeddings
     if type(data) == list:
-        emb_dict = {e.word: np.array(json.loads(e.vbytes)) for e in query_embeddings()}
+        emb_dict = {e.word: np.array(json.loads(e.vbytes)) for e in EMBEDDINGS}
         q_vectors = [emb_dict[d] for d in data if d in emb_dict]
         return sum(q_vectors) / len(q_vectors), None
     return None, None
@@ -67,7 +68,7 @@ def search_drinks(drinks, query, drink_name=None):
 def extract_keywords(text, query):
     if query is None:
         return []
-    emb_dict = {e.word: np.array(json.loads(e.vbytes)) for e in query_embeddings()}
+    emb_dict = {e.word: np.array(json.loads(e.vbytes)) for e in EMBEDDINGS}
     tokens = word_tokenize(text)
     stem_to_word = {}
     for t in tokens:
@@ -98,4 +99,6 @@ def extract_keywords(text, query):
         if dst_vec[i] > KEYWORD_THRESH:
             break
         res += norm_to_word[norms[i]]
-    return res
+    # Reversing ensures longer keywords are processed first for proper bolding
+    # E.g. bold "apples" before "apple" so the 's' doesn't get ignored
+    return sorted(res, reverse=True)
