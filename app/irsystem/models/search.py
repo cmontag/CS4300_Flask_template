@@ -78,14 +78,17 @@ def extract_keywords(text, query):
                 stem_to_word[stem] = set()
             stem_to_word[stem].add(word)
     phrased = PHRASER[list(stem_to_word)]
-    norms = []
+    norms = set()
     norm_to_word = {}
     for phr in phrased:
         if phr in set(DESC_MAP.index):
             norm = DESC_MAP['level_3'][phr]
             if norm in emb_dict:
-                norm_to_word[norm] = [word for stem in phr.split('_') for word in stem_to_word[stem]]
-                norms.append(norm)
+                if norm not in norm_to_word:
+                    norm_to_word[norm] = []
+                norm_to_word[norm] += [word for stem in phr.split('_') for word in stem_to_word[stem]]
+                norms.add(norm)
+    norms = list(norms)
     vectors = [emb_dict[e] for e in norms]
     knn_data = np.array(vectors).reshape(len(vectors), -1)
     dst_vec = cdist([query], knn_data, 'cosine')[0]
