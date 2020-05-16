@@ -5,6 +5,7 @@ from gensim.models.phrases import Phraser
 from nltk.tokenize import word_tokenize
 from nltk.stem import SnowballStemmer
 from nltk.corpus import stopwords
+from random import shuffle
 import pandas as pd
 import numpy as np
 import json
@@ -53,17 +54,20 @@ def make_query(data):
         return sum(q_vectors) / len(q_vectors), None
     return None, None
 
-def search_drinks(drinks, query, drink_name=None):
+def search_drinks(drinks, query, do_shuffle=False, drink_name=None):
     if query is None:
-        return [(d, None) for d in drinks]
+        ranking = [(d, None) for d in drinks]
+    else:
+        # Search database results for k nearest neighbors
+        d_vectors = [np.array(json.loads(d.vbytes)) for d in drinks if d.name != drink_name]
+        knn_data = np.array(d_vectors).reshape(len(d_vectors), -1)
+        dst_vec = cdist([query], knn_data, 'cosine')[0]
+        ind_vec = np.argsort(dst_vec)
+        ranking = [(drinks[i], score(dst_vec[i])) for i in ind_vec if dst_vec[i] <= SEARCH_THRESH]
 
-    # Search database results for k nearest neighbors
-    d_vectors = [np.array(json.loads(d.vbytes)) for d in drinks if d.name != drink_name]
-    knn_data = np.array(d_vectors).reshape(len(d_vectors), -1)
-    dst_vec = cdist([query], knn_data, 'cosine')[0]
-    ind_vec = np.argsort(dst_vec)
-    
-    return [(drinks[i], score(dst_vec[i])) for i in ind_vec if dst_vec[i] <= SEARCH_THRESH]
+    if do_shuffle:
+        shuffle(ranking)
+    return ranking
 
 def extract_keywords(text, query):
     if query is None:

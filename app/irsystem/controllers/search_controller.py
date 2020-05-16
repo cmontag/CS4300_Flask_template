@@ -16,6 +16,8 @@ def get_sid():
 	return session['sid']
 
 def conv_arg(arg, conv):
+	if conv == bool:
+		return arg == 'true'
 	return conv(arg) if arg is not None and arg != '' else None
 
 def make_args(args):
@@ -41,9 +43,9 @@ def serve_desc():
 
 @irsystem.route('/search', methods=['GET'])
 def search():
-	more = conv_arg(request.args.get('more'), str) # Populated if AJAX request
+	more = conv_arg(request.args.get('more'), bool) # Populated if AJAX request
 	# Load empty page initially
-	if more is None:
+	if not more:
 		return render_template('results.html')
 
 	sid = get_sid()
@@ -51,25 +53,27 @@ def search():
 	args_key = '{}-args'.format(sid.hex)
 	args = make_args(request.args)
 	page = conv_arg(request.args.get('page'), int)
+	lucky = conv_arg(request.args.get('lucky'), bool) # Populated if ranking to be randomized
 	query, drink_name = make_query(args.data)
 	# New client request (excluding page changes)
-	if args != cache.get(args_key):
-		cache.delete(rank_key) # Drinks are stale if new args
+	if args != cache.get(args_key) or lucky:
+		cache.delete(rank_key) # Drinks are stale if new args or "lucky" search
 		cache.set(args_key, args)
 		# print('New args!')
 	ranking = cache.get(rank_key)
 	if ranking is None:
 		drinks = query_drink(args.dtype, args.pmin, args.pmax, args.amin, args.amax, args.base)
 		# print('New drinks!')
-		ranking = search_drinks(drinks, query, drink_name) if len(drinks) > 0 else []
+		ranking = search_drinks(drinks, query, lucky, drink_name) if len(drinks) > 0 else []
 		cache.set(rank_key, ranking[:CACHE_SIZE])
 	
 	results = []
 	ind1 = (page - 1) * PAGE_K
 	ind2 = ind1 + PAGE_K
 	for drink, dist in ranking[ind1:ind2]:
+		description = drink.description if drink.description is not None else ''
 		reviews = json.loads(drink.reviews) if drink.reviews is not None else []
-		keywords = extract_keywords(drink.description + ' '.join([r['body'] for r in reviews]), query)
+		keywords = extract_keywords(description + ' '.join([r['body'] for r in reviews]), query)
 		results.append({
 			'drink': drink.serialize,
 			'dist': dist,
