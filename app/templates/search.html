@@ -26,7 +26,52 @@
       <p id="base-line" class="lead justify-content-between text-nowrap" style="display: none;">
          <span>I want the base to be </span>
          <label class="sr-only" for="base-input">base</label>
-         <input id="base-input" type="text" name="base" class="form-control mb-2" placeholder="any base">
+         <select id="base-input" name="base" class="form-control mb-2">
+            <option>any base</option>
+            <option>absinthe</option>
+            <option>Agavero</option>
+            <option>Averna</option>
+            <option>banana</option>
+            <option>beer</option>
+            <option>Benedictine</option>
+            <option>brandy</option>
+            <option>cachaca</option>
+            <option>cachaça</option>
+            <option>Campari</option>
+            <option>Chambord</option>
+            <option>Champagne</option>
+            <option>chocolate</option>
+            <option>coffee</option>
+            <option>Cointreau</option>
+            <option>Frangelico</option>
+            <option>Galliano</option>
+            <option>gin</option>
+            <option>Grand</option>
+            <option>Irish</option>
+            <option>Jagermeister</option>
+            <option>lychee</option>
+            <option>Mekhong</option>
+            <option>melon</option>
+            <option>Midori</option>
+            <option>nonalcoholic</option>
+            <option>peach</option>
+            <option>Pimm</option>
+            <option>pisco</option>
+            <option>rum</option>
+            <option>RumChata</option>
+            <option>sake</option>
+            <option>sherry</option>
+            <option>shooter</option>
+            <option>sloe</option>
+            <option>Southern</option>
+            <option>Strega</option>
+            <option>tequila</option>
+            <option>TyKu</option>
+            <option>vermouth</option>
+            <option>vodka</option>
+            <option>whiskey</option>
+            <option>wine</option>
+         </select>
       </p>
       <p class="lead d-flex justify-content-between text-nowrap">
          <span>It should be </span>
@@ -141,17 +186,6 @@
          }
       }
 
-      $(function() {
-         var availableTags = ['vodka', 'Midori', 'sloe', 'lychee', 'Chambord', 'Averna', 'beer', 'Campari', 'coffee', 'banana', 'sherry', 'Champagne', 'Mekhong', 'Jagermeister', 'Irish', 'Pimm', 'sake', 'nonalcoholic', 'RumChata', 'peach', 'absinthe', 'rum', 'Galliano', 'Southern', 'melon', 'Benedictine', 'brandy', 'tequila', 'pisco', 'shooter', 'chocolate', 'gin', 'Cointreau', 'whiskey', 'cachaca', 'Strega', 'vermouth', 'wine', 'cachaça', 'Frangelico', 'Grand', 'TyKu', 'Agavero'];
-         $('#base-input').autocomplete({
-            source: availableTags,
-            delay: 0,
-            minLength: 0
-         }).focus(function(){            
-            $(this).data("uiAutocomplete").search($(this).val());
-         });
-      });
-
       $('#lucky').click(function(){
          $('.main-form').append($('<input type="hidden" name="lucky" value="true" />'));
          $('.main-form').submit();
@@ -172,6 +206,9 @@
          };
          loadAnimation.onanimationend = () => {
             $(this).find(':input').filter(function(){ return !this.value; }).attr('disabled', 'disabled');
+            if ($('#base-input').val() == 'any base') {
+               $('#base-input').attr('disabled', 'disabled');
+            }
             form.submit();
          }
       });
