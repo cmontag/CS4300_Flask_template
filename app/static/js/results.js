@@ -84,7 +84,6 @@ function loadMore(firstCall) {
    if (firstCall) {
       payload.lucky = lucky
    }
-   console.log(payload)
 
    $.getJSON('/search', payload, function(data) {
       var results = data.results;
