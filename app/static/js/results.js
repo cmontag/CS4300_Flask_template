@@ -10,7 +10,7 @@ if (fromtop) {
 }
 
 // rise liquid and fade out on navigation click
-$('.nav-link, .masthead-brand a').click(function() {
+function rise_liquid_and_fade() {
    event.preventDefault();
    $('loading-text').removeClass('loadin');
    const fillAnimation = document.querySelector('.liquid');
@@ -25,7 +25,8 @@ $('.nav-link, .masthead-brand a').click(function() {
    loadAnimation.onanimationend = () => {
       window.location = $(this).attr('href');
    }
-});
+}
+$('.nav-link, .masthead-brand a').click(rise_liquid_and_fade);
 
 page = parseInt(urlParams.get('page'))
 drink = urlParams.get('drink')
@@ -156,7 +157,8 @@ function loadMore() {
             if (results[i].drink.origin != null && !isNaN(results[i].drink.origin)) {
                info_body.append($('<p><strong>Origin:</strong> ' + results[i].drink.origin + '</p>'));
             }
-            info_body.append($('<a href="/search?fromtop=true&page=0&drink=' + results[i].drink.name + '" class="btn btn-outline-primary mr-1">Find similar drinks</a>'));
+            info_body.append($('<a href="/search?fromtop=true&page=0&drink=' + results[i].drink.name + '" class="similar-drinks-btn btn btn-outline-primary mr-1">Find similar drinks</a>'));
+            info_body.on('click', '.similar-drinks-btn', rise_liquid_and_fade);
             info_body.append('\n');
             var urlMsg = (results[i].drink.price != null) ? 'Order online' : 'Learn more'
             info_body.append($('<a href="' + results[i].drink.url + '" class="btn btn-outline-primary" target="_blank">' + urlMsg + '</a>'));
@@ -227,14 +229,31 @@ $(function() {
    $('#more-results').bind('click', loadMore);
 });
 
+// function to wrap keywords in span tag
 $.fn.wrapInTag = function(opts) {
   
-  var tag = opts.tag || 'strong',
+  var tag = opts.tag || 'span',
       words = opts.words || [],
       regex = RegExp(words.join('|'), 'gi'),
-      replacement = '<'+ tag +'>$&</'+ tag +'>';
+      replacement = '<'+ tag +' class="keyword" style="font-weight: bold;">$&</'+ tag +'>';
   
   return this.html(function() {
     return $(this).text().replace(regex, replacement);
   });
 };
+
+// keywords toggle button
+var keywords_toggle_container = $('<div class="keywords-toggle-container"></div>');
+var keywords_toggle_button = $('<input type="checkbox" checked data-toggle="toggle" data-onstyle="dark" data-offstyle="secondary" data-style="border" data-size="sm" data-on="keywords" data-off="off">')
+keywords_toggle_container.append(keywords_toggle_button);
+keywords_toggle_button.change(function() {
+   if ($(this).prop('checked')) {
+      $('.keyword').css('font-weight', 'bold');
+   } else {
+      $('.keyword').css('font-weight', 'normal');
+   }
+})
+if ((descriptors != '' && descriptors != null) || (drink != '' && drink != null)) {
+   $('header.masthead').append(keywords_toggle_container);
+   keywords_toggle_container.tooltip({'placement': 'left', 'trigger': 'hover', 'title': 'Click to toggle highlighting of keywords in beverage descriptions'});
+}
