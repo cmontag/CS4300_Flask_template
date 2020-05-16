@@ -92,11 +92,10 @@ def normalize(text):
     tokens = word_tokenize(text)
     res = []
     for t in tokens:
-        word = str.lower(str(t))
+        word = str.lower(str(t)).translate(PUNC_TABLE)
         stem = STEMMER.stem(word)
-        norm = stem.translate(PUNC_TABLE)
-        if len(norm) > 1 and norm not in STOP_WORDS:
-            res.append(norm)
+        if len(stem) > 1 and stem not in STOP_WORDS:
+            res.append(stem)
     return res
 
 # Return a list of unique types found in entire corpus.

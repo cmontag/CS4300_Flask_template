@@ -42,7 +42,7 @@
          <input id="maxprice-input" type="text" name="maxprice" class="form-control mb-2" placeholder="any price" autocomplete="off">
       </p>
       <p id="abv-line" class="lead justify-content-between text-nowrap" style="display: flex;">
-         <span>Its <span class="tooltip-underline" data-toggle="tooltip" data-placement="bottom" title="Alcohol by volume, or ABV, measures the percentage of alcohol contained in an alcoholic beverage">ABV</span> is between</span>
+         <span>Its <span class="tooltip-underline" data-toggle="tooltip" data-placement="bottom" title="Alcohol by volume, or ABV, is the percent of a drink that is alcohol (ethanol)">ABV</span> is between</span>
          <label class="sr-only" for="minabv-input">minimum abv</label>
          <input id="minabv-input" type="text" name="minabv" class="form-control mb-2 mr-3" placeholder="any ABV" autocomplete="off">
          <span> and</span>
@@ -50,7 +50,8 @@
          <input id="maxabv-input" type="text" name="maxabv" class="form-control mb-2" placeholder="any ABV" autocomplete="off">
       </p>
       <p class="lead mt-5 mx-auto">
-         <button type="submit" class="btn btn-lg btn-secondary">pick my poison</button>
+         <button type="submit" class="btn btn-lg btn-secondary custom mr-3">pick my poison</button>
+         <button id="lucky" class="btn btn-lg btn-secondary custom" data-toggle="tooltip" data-placement="right" title="Feeling adventurous? This will randomize the order of your relevant search results!">i'm feeling lucky</button>
       </p>
    </form>
 {% endblock %}
@@ -149,6 +150,11 @@
          }).focus(function(){            
             $(this).data("uiAutocomplete").search($(this).val());
          });
+      });
+
+      $('#lucky').click(function(){
+         $('.main-form').append($('<input type="hidden" name="lucky" value="true" />'));
+         $('.main-form').submit();
       });
 
       $('form').submit(function(event) {

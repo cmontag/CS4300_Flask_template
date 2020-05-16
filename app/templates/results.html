@@ -1,4 +1,8 @@
 {% extends "base.html" %}
+{% block toplinks %}
+   {{ super() }}
+   <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+{% endblock %}
 {% block main %}
    <p class="lead text-center">here's what we've picked for you</p><hr class="fancy mt-4 mb-5" />
    <div class="text-left text-dark results-list"></div>
@@ -16,14 +20,15 @@
          <div class="sk-circle10 sk-circle"></div>
          <div class="sk-circle11 sk-circle"></div>
          <div class="sk-circle12 sk-circle"></div>
-         </div>
-      <a id="more-results" class="btn btn-lg btn-secondary" href="" style="display: none;">more results</a>
+      </div>
+      <a id="more-results" class="btn btn-lg btn-secondary custom" href="" style="display: none;">more results</a>
    </div>
 {% endblock %}
 {% block bottomlinks %}
    <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
    <script src="/static/js/results.js"></script>
 {% endblock %}
 {% block script %}{% endblock %}
